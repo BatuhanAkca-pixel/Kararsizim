@@ -1,0 +1,21 @@
+{% load static %}
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Kararsız kaldığın konuları topluluğa sor.">
+  <title>{% block title %}kararsızım.{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+  {% include "includes/header.html" %}
+  {% include "includes/messages.html" %}
+  <main id="main-content" class="page-shell">
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="site-footer">
+    <div class="page-shell">Oy vermek için hesap gerekmiyor.</div>
+  </footer>
+</body>
+</html>

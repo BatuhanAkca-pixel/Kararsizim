@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}{{ poll.question }} · kararsızım.{% endblock %}
+
+{% block content %}
+<article class="poll-detail">
+  <div class="poll-meta">
+    <span>@{{ poll.author.username }}</span>
+    <time datetime="{{ poll.created_at|date:'c' }}">{{ poll.created_at|date:'j F Y, H:i' }}</time>
+  </div>
+  <h1>{{ poll.question }}</h1>
+  {% if poll.description %}<p class="poll-description">{{ poll.description }}</p>{% endif %}
+  {% if selected_vote %}
+    <section class="results" aria-labelledby="results-title">
+      <div class="results-heading">
+        <h2 id="results-title">Sonuçlar</h2>
+        <span>{{ total_votes }} oy</span>
+      </div>
+      {% for option in options %}
+        <div class="result{% if selected_vote.option_id == option.id %} result-selected{% endif %}">
+          <div class="result-label">
+            <span>{{ option.text }}{% if selected_vote.option_id == option.id %} <strong>— senin oyun</strong>{% endif %}</span>
+            <span>{{ option.percentage }}% · {{ option.vote_count }} oy</span>
+          </div>
+          <div class="result-track" aria-hidden="true">
+            <div class="result-fill" style="width: {{ option.percentage }}%"></div>
+          </div>
+        </div>
+      {% endfor %}
+    </section>
+  {% else %}
+    <form method="post" action="{% url 'polls:vote' poll.id %}" class="vote-form">
+      {% csrf_token %}
+      <fieldset class="option-fieldset">
+        <legend>Bir seçenek seç</legend>
+        {% for option in options %}
+          <label class="option-choice">
+            <input type="radio" name="option_id" value="{{ option.id }}" required>
+            <span>{{ option.text }}</span>
+          </label>
+        {% endfor %}
+      </fieldset>
+      <button class="button button-primary button-full" type="submit">Oyumu gönder</button>
+    </form>
+  {% endif %}
+</article>
+{% endblock %}

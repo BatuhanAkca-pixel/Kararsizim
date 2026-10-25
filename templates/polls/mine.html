@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Anketlerim · kararsızım.{% endblock %}
+
+{% block content %}
+<section class="section-heading">
+  <div>
+    <p class="eyebrow">Kendi soruların</p>
+    <h1>Anketlerim</h1>
+  </div>
+  <a class="button button-primary" href="{% url 'polls:create' %}">Yeni anket</a>
+</section>
+
+{% if page_obj %}
+  <section class="poll-grid" aria-label="Anketlerim">
+    {% for poll in page_obj %}
+      {% include "includes/poll_card.html" with poll=poll %}
+    {% endfor %}
+  </section>
+  {% include "includes/pagination.html" with page_obj=page_obj %}
+{% else %}
+  <section class="empty-state">
+    <h2>Henüz bir anketin yok.</h2>
+    <p>İlk kararsızlığını topluluğa sor.</p>
+    <a class="button button-primary" href="{% url 'polls:create' %}">Anket oluştur</a>
+  </section>
+{% endif %}
+{% endblock %}

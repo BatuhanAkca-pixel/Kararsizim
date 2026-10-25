@@ -1,0 +1,17 @@
+<article class="poll-card">
+  <div class="poll-meta">
+    <span>@{{ poll.author.username }}</span>
+    <time datetime="{{ poll.created_at|date:'c' }}">{{ poll.created_at|timesince }} önce</time>
+  </div>
+  <h2><a href="{% url 'polls:detail' poll.id %}">{{ poll.question }}</a></h2>
+  {% if poll.description %}<p class="poll-description">{{ poll.description|truncatechars:150 }}</p>{% endif %}
+  <ul class="option-preview" aria-label="Seçenekler">
+    {% for option in poll.options.all %}
+      <li>{{ option.text }}</li>
+    {% endfor %}
+  </ul>
+  <div class="poll-card-footer">
+    <span>{{ poll.total_votes|default:0 }} oy</span>
+    <a class="button button-quiet" href="{% url 'polls:detail' poll.id %}">Anketi gör</a>
+  </div>
+</article>

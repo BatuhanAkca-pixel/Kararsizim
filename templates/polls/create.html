@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Anket oluştur · kararsızım.{% endblock %}
+
+{% block content %}
+<section class="form-card poll-form-card" aria-labelledby="create-title">
+  <p class="eyebrow">Kararını paylaş</p>
+  <h1 id="create-title">Yeni anket oluştur</h1>
+  <p class="muted">Bir soru sor ve 2–5 seçenek ekle.</p>
+  <form method="post" id="poll-form" novalidate>
+    {% csrf_token %}
+    {% if poll_form.non_field_errors %}<div class="form-errors">{{ poll_form.non_field_errors }}</div>{% endif %}
+    {% for field in poll_form %}
+      <div class="field{% if field.errors %} field-invalid{% endif %}">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}<div class="field-errors">{{ field.errors }}</div>{% endif %}
+      </div>
+    {% endfor %}
+
+    <fieldset class="options-editor">
+      <legend>Seçenekler</legend>
+      {{ option_formset.management_form }}
+      {% if option_formset.non_form_errors %}<div class="form-errors">{{ option_formset.non_form_errors }}</div>{% endif %}
+      <div id="option-forms">
+        {% for form in option_formset %}
+          <div class="option-row">
+            <label for="{{ form.text.id_for_label }}">Seçenek {{ forloop.counter }}</label>
+            {{ form.text }}
+            {% if form.text.errors %}<div class="field-errors">{{ form.text.errors }}</div>{% endif %}
+            <button class="button button-quiet remove-option" type="button">Kaldır</button>
+          </div>
+        {% endfor %}
+      </div>
+      <button class="button button-quiet" id="add-option" type="button">+ Seçenek ekle</button>
+    </fieldset>
+    <button class="button button-primary button-full" type="submit">Anketi yayınla</button>
+  </form>
+</section>
+
+<template id="empty-option-form">
+  <div class="option-row">
+    <label for="id_options-__prefix__-text">Seçenek</label>
+    {{ option_formset.empty_form.text }}
+    <button class="button button-quiet remove-option" type="button">Kaldır</button>
+  </div>
+</template>
+<script src="{% static 'js/poll-form.js' %}" defer></script>
+{% endblock %}
